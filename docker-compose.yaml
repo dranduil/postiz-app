@@ -3,25 +3,31 @@ services:
     image: ghcr.io/gitroomhq/postiz-app:latest
     container_name: postiz
     restart: always
+
     environment:
       # === Required Settings
-      MAIN_URL: 'http://localhost:4007'
-      FRONTEND_URL: 'http://localhost:4007'
-      NEXT_PUBLIC_BACKEND_URL: 'http://localhost:4007/api'
-      JWT_SECRET: 'random string that is unique to every install - just type random characters here!'
+      MAIN_URL: 'https://marketing.diwanio.ae'
+      FRONTEND_URL: 'https://marketing.diwanio.ae'
+      NEXT_PUBLIC_BACKEND_URL: 'https://marketing.diwanio.ae/api'
+
+      # Replace this with a long, random secret.
+      JWT_SECRET: 'CHANGE-THIS-TO-A-LONG-RANDOM-SECRET'
+
       DATABASE_URL: 'postgresql://postiz-user:postiz-password@postiz-postgres:5432/postiz-db-local'
       REDIS_URL: 'redis://postiz-redis:6379'
       BACKEND_INTERNAL_URL: 'http://localhost:3000'
       TEMPORAL_ADDRESS: 'temporal:7233'
+
       IS_GENERAL: 'true'
       DISABLE_REGISTRATION: 'false'
+      RUN_CRON: 'true'
 
       # === Storage Settings
       STORAGE_PROVIDER: 'local'
       UPLOAD_DIRECTORY: '/uploads'
       NEXT_PUBLIC_UPLOAD_DIRECTORY: '/uploads'
 
-      # === Cloudflare (R2) Settings
+      # === Cloudflare R2 Settings
       # STORAGE_PROVIDER: 'cloudflare'
       # CLOUDFLARE_ACCOUNT_ID: 'your-account-id'
       # CLOUDFLARE_ACCESS_KEY: 'your-access-key'
@@ -34,56 +40,76 @@ services:
       X_URL: ''
       X_API_KEY: ''
       X_API_SECRET: ''
+
       LINKEDIN_CLIENT_ID: ''
       LINKEDIN_CLIENT_SECRET: ''
+
       REDDIT_CLIENT_ID: ''
       REDDIT_CLIENT_SECRET: ''
+
       GITHUB_CLIENT_ID: ''
       GITHUB_CLIENT_SECRET: ''
+
       APPLE_CLIENT_ID: ''
       APPLE_TEAM_ID: ''
       APPLE_KEY_ID: ''
       APPLE_PRIVATE_KEY: ''
+
       BEEHIIVE_API_KEY: ''
       BEEHIIVE_PUBLICATION_ID: ''
+
       THREADS_APP_ID: ''
       THREADS_APP_SECRET: ''
+
       FACEBOOK_APP_ID: ''
       FACEBOOK_APP_SECRET: ''
+
       YOUTUBE_CLIENT_ID: ''
       YOUTUBE_CLIENT_SECRET: ''
+
       TIKTOK_CLIENT_ID: ''
       TIKTOK_CLIENT_SECRET: ''
+
       PINTEREST_CLIENT_ID: ''
       PINTEREST_CLIENT_SECRET: ''
+
       DRIBBBLE_CLIENT_ID: ''
       DRIBBBLE_CLIENT_SECRET: ''
+
       TUMBLR_CLIENT_ID: ''
       TUMBLR_CLIENT_SECRET: ''
+
       DISCORD_CLIENT_ID: ''
       DISCORD_CLIENT_SECRET: ''
       DISCORD_BOT_TOKEN_ID: ''
+
       SLACK_ID: ''
       SLACK_SECRET: ''
       SLACK_SIGNING_SECRET: ''
+
       MASTODON_URL: 'https://mastodon.social'
       MASTODON_CLIENT_ID: ''
       MASTODON_CLIENT_SECRET: ''
 
-      # === OAuth & Authentik Settings
+      # === OAuth Settings
       # NEXT_PUBLIC_POSTIZ_OAUTH_DISPLAY_NAME: 'Authentik'
       # NEXT_PUBLIC_POSTIZ_OAUTH_LOGO_URL: 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/master/png/authentik.png'
       # POSTIZ_GENERIC_OAUTH: 'false'
       # POSTIZ_OAUTH_URL: 'https://auth.example.com'
       # POSTIZ_OAUTH_AUTH_URL: 'https://auth.example.com/application/o/authorize'
       # POSTIZ_OAUTH_TOKEN_URL: 'https://auth.example.com/application/o/token'
-      # POSTIZ_OAUTH_USERINFO_URL: 'https://authentik.example.com/application/o/userinfo'
+      # POSTIZ_OAUTH_USERINFO_URL: 'https://auth.example.com/application/o/userinfo'
       # POSTIZ_OAUTH_CLIENT_ID: ''
       # POSTIZ_OAUTH_CLIENT_SECRET: ''
-      # POSTIZ_OAUTH_SCOPE: "openid profile email"  # Optional: uncomment to override default scope
+      # POSTIZ_OAUTH_SCOPE: 'openid profile email'
 
-      # === Sentry
+      # === Email / Resend Settings
+      # Uncomment these if you want email verification.
+      # RESEND_API_KEY: ''
+      # EMAIL_FROM_ADDRESS: 'noreply@diwanio.ae'
+      # EMAIL_FROM_NAME: 'Diwanio Marketing'
 
+      # === Sentry / Debugging
       # NEXT_PUBLIC_SENTRY_DSN: 'http://spotlight:8969/stream'
       # SENTRY_SPOTLIGHT: '1'
 
@@ -103,79 +129,136 @@ services:
       # === Developer Settings
       NX_ADD_PLUGINS: false
 
-      # === Short Link Service Settings (Optional - leave blank if unused)
-      # DUB_TOKEN: ""
-      # DUB_API_ENDPOINT: "https://api.dub.co"
-      # DUB_SHORT_LINK_DOMAIN: "dub.sh"
-      # SHORT_IO_SECRET_KEY: ""
-      # KUTT_API_KEY: ""
-      # KUTT_API_ENDPOINT: "https://kutt.it/api/v2"
-      # KUTT_SHORT_LINK_DOMAIN: "kutt.it"
-      # LINK_DRIP_API_KEY: ""
-      # LINK_DRIP_API_ENDPOINT: "https://api.linkdrip.com/v1/"
-      # LINK_DRIP_SHORT_LINK_DOMAIN: "dripl.ink"
+      # === Short Link Services
+      # DUB_TOKEN: ''
+      # DUB_API_ENDPOINT: 'https://api.dub.co'
+      # DUB_SHORT_LINK_DOMAIN: 'dub.sh'
+
+      # SHORT_IO_SECRET_KEY: ''
+
+      # KUTT_API_KEY: ''
+      # KUTT_API_ENDPOINT: 'https://kutt.it/api/v2'
+      # KUTT_SHORT_LINK_DOMAIN: 'kutt.it'
+
+      # LINK_DRIP_API_KEY: ''
+      # LINK_DRIP_API_ENDPOINT: 'https://api.linkdrip.com/v1/'
+      # LINK_DRIP_SHORT_LINK_DOMAIN: 'dripl.ink'
 
     volumes:
       - postiz-config:/config/
       - postiz-uploads:/uploads/
-    ports:
-      - '4007:5000'
+
+    # No host port is required when Dokploy/Traefik routes
+    # marketing.diwanio.ae directly to container port 5000.
+    expose:
+      - '5000'
+
     networks:
       - postiz-network
       - temporal-network
+
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "const r=require('http').get('http://localhost:5000/',res=>process.exit(res.statusCode<500?0:1));r.on('error',()=>process.exit(1));r.setTimeout(4000,()=>{r.destroy();process.exit(1)})"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
     depends_on:
       postiz-postgres:
         condition: service_healthy
+
       postiz-redis:
         condition: service_healthy
+
+      temporal:
+        condition: service_healthy
+
 
   postiz-postgres:
     image: postgres:17-alpine
     container_name: postiz-postgres
     restart: always
+
     environment:
-      POSTGRES_PASSWORD: postiz-password
-      POSTGRES_USER: postiz-user
-      POSTGRES_DB: postiz-db-local
+      POSTGRES_PASSWORD: 'postiz-password'
+      POSTGRES_USER: 'postiz-user'
+      POSTGRES_DB: 'postiz-db-local'
+
     volumes:
       - postgres-volume:/var/lib/postgresql/data
+
     networks:
       - postiz-network
+
     healthcheck:
-      test: pg_isready -U postiz-user -d postiz-db-local
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U postiz-user -d postiz-db-local'
+        ]
       interval: 10s
-      timeout: 3s
-      retries: 3
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+
   postiz-redis:
     image: redis:7.2
     container_name: postiz-redis
     restart: always
-    healthcheck:
-      test: redis-cli ping
-      interval: 10s
-      timeout: 3s
-      retries: 3
+
     volumes:
       - postiz-redis-data:/data
+
     networks:
       - postiz-network
 
-  # For Application Monitoring / Debugging
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'redis-cli ping | grep -q PONG'
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+
+  # Optional debugging service.
+  # It will not start during a normal deployment because it uses a profile.
   spotlight:
-    pull_policy: always
-    container_name: spotlight
-    ports:
-      - 8969:8969/tcp
+    profiles:
+      - debug
+
     image: ghcr.io/getsentry/spotlight:latest
+    container_name: spotlight
+    restart: unless-stopped
+    pull_policy: always
+
+    expose:
+      - '8969'
+
     networks:
       - postiz-network
 
-  # -----------------------
+
+  # ==========================================================
   # Temporal Stack
-  # -----------------------
+  # ==========================================================
+
   temporal-elasticsearch:
-    container_name: temporal-elasticsearch
     image: elasticsearch:7.17.27
+    container_name: temporal-elasticsearch
+    restart: always
+
     environment:
       - cluster.routing.allocation.disk.threshold_enabled=true
       - cluster.routing.allocation.disk.watermark.low=512mb
@@ -184,34 +267,63 @@ services:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms256m -Xmx256m
       - xpack.security.enabled=false
+
+    expose:
+      - '9200'
+
     networks:
       - temporal-network
-    expose:
-      - 9200
+
     volumes:
-      - /var/lib/elasticsearch/data
+      - temporal-elasticsearch-data:/usr/share/elasticsearch/data
+
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'curl -fsS "http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s" || exit 1'
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
 
   temporal-postgresql:
-    container_name: temporal-postgresql
     image: postgres:16
+    container_name: temporal-postgresql
+    restart: always
+
     environment:
-      POSTGRES_PASSWORD: temporal
-      POSTGRES_USER: temporal
+      POSTGRES_PASSWORD: 'temporal'
+      POSTGRES_USER: 'temporal'
+
+    expose:
+      - '5432'
+
     networks:
       - temporal-network
-    expose:
-      - 5432
+
     volumes:
-      - /var/lib/postgresql/data
+      - temporal-postgres-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U temporal'
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
 
   temporal:
-    container_name: temporal
-    ports:
-      - '7233:7233'
     image: temporalio/auto-setup:1.28.1
-    depends_on:
-      - temporal-postgresql
-      - temporal-elasticsearch
+    container_name: temporal
+    restart: always
+
     environment:
       - DB=postgres12
       - DB_PORT=5432
@@ -223,36 +335,98 @@ services:
       - ES_SEEDS=temporal-elasticsearch
       - ES_VERSION=v7
       - TEMPORAL_NAMESPACE=default
+
+    expose:
+      - '7233'
+
     networks:
       - temporal-network
+
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+
     labels:
       kompose.volume.type: configMap
 
+    depends_on:
+      temporal-postgresql:
+        condition: service_healthy
+
+      temporal-elasticsearch:
+        condition: service_healthy
+
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'temporal',
+          'operator',
+          'cluster',
+          'health',
+          '--address',
+          'temporal:7233'
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+
   temporal-admin-tools:
-    container_name: temporal-admin-tools
     image: temporalio/admin-tools:1.28.1-tctl-1.18.4-cli-1.4.1
+    container_name: temporal-admin-tools
+    restart: on-failure
+
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CLI_ADDRESS=temporal:7233
+
     networks:
       - temporal-network
+
     stdin_open: true
-    depends_on:
-      - temporal
     tty: true
 
+    depends_on:
+      temporal:
+        condition: service_healthy
+
+
   temporal-ui:
-    container_name: temporal-ui
     image: temporalio/ui:2.34.0
+    container_name: temporal-ui
+    restart: always
+
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://127.0.0.1:3000
+      - TEMPORAL_CORS_ORIGINS=https://marketing.diwanio.ae
+
+    # Important:
+    # Do not map 8080:8080 to the host.
+    # This avoids the port conflict that caused your deployment to fail.
+    expose:
+      - '8080'
+
     networks:
       - temporal-network
-    ports:
-      - '8080:8080'
+
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'curl',
+          '-f',
+          'http://localhost:8080/healthz'
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+    depends_on:
+      temporal:
+        condition: service_healthy
+
 
 volumes:
   postgres-volume:
@@ -267,9 +441,16 @@ volumes:
   postiz-uploads:
     external: false
 
+  temporal-postgres-data:
+    external: false
+
+  temporal-elasticsearch-data:
+    external: false
+
+
 networks:
   postiz-network:
     external: false
+
   temporal-network:
     driver: bridge
-    name: temporal-network
