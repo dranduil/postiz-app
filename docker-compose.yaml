@@ -299,7 +299,7 @@ services:
       test:
         [
           'CMD-SHELL',
-          'temporal operator cluster health --address 127.0.0.1:7233 | grep -q SERVING'
+          'temporal operator cluster health --address "$$(hostname -i):7233" | grep -q SERVING'
         ]
       interval: 10s
       timeout: 5s
