@@ -1,7 +1,6 @@
 services:
   postiz:
     image: ghcr.io/gitroomhq/postiz-app:latest
-    container_name: postiz
     restart: always
 
     environment:
@@ -10,11 +9,12 @@ services:
       FRONTEND_URL: 'https://marketing.diwanio.ae'
       NEXT_PUBLIC_BACKEND_URL: 'https://marketing.diwanio.ae/api'
 
-      # Replace this with a long, random secret.
+      # Replace with a strong random secret
       JWT_SECRET: 'CHANGE-THIS-TO-A-LONG-RANDOM-SECRET'
 
       DATABASE_URL: 'postgresql://postiz-user:postiz-password@postiz-postgres:5432/postiz-db-local'
       REDIS_URL: 'redis://postiz-redis:6379'
+
       BACKEND_INTERNAL_URL: 'http://localhost:3000'
       TEMPORAL_ADDRESS: 'temporal:7233'
 
@@ -29,14 +29,14 @@ services:
 
       # === Cloudflare R2 Settings
       # STORAGE_PROVIDER: 'cloudflare'
-      # CLOUDFLARE_ACCOUNT_ID: 'your-account-id'
-      # CLOUDFLARE_ACCESS_KEY: 'your-access-key'
-      # CLOUDFLARE_SECRET_ACCESS_KEY: 'your-secret-access-key'
-      # CLOUDFLARE_BUCKETNAME: 'your-bucket-name'
-      # CLOUDFLARE_BUCKET_URL: 'https://your-bucket-url.r2.cloudflarestorage.com/'
+      # CLOUDFLARE_ACCOUNT_ID: ''
+      # CLOUDFLARE_ACCESS_KEY: ''
+      # CLOUDFLARE_SECRET_ACCESS_KEY: ''
+      # CLOUDFLARE_BUCKETNAME: ''
+      # CLOUDFLARE_BUCKET_URL: ''
       # CLOUDFLARE_REGION: 'auto'
 
-      # === Social Media API Settings
+      # === Social Media Providers
       X_URL: ''
       X_API_KEY: ''
       X_API_SECRET: ''
@@ -91,35 +91,37 @@ services:
       MASTODON_CLIENT_ID: ''
       MASTODON_CLIENT_SECRET: ''
 
-      # === OAuth Settings
+      # === OAuth / OIDC
       # NEXT_PUBLIC_POSTIZ_OAUTH_DISPLAY_NAME: 'Authentik'
-      # NEXT_PUBLIC_POSTIZ_OAUTH_LOGO_URL: 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/master/png/authentik.png'
+      # NEXT_PUBLIC_POSTIZ_OAUTH_LOGO_URL: ''
       # POSTIZ_GENERIC_OAUTH: 'false'
-      # POSTIZ_OAUTH_URL: 'https://auth.example.com'
-      # POSTIZ_OAUTH_AUTH_URL: 'https://auth.example.com/application/o/authorize'
-      # POSTIZ_OAUTH_TOKEN_URL: 'https://auth.example.com/application/o/token'
-      # POSTIZ_OAUTH_USERINFO_URL: 'https://auth.example.com/application/o/userinfo'
+      # POSTIZ_OAUTH_URL: ''
+      # POSTIZ_OAUTH_AUTH_URL: ''
+      # POSTIZ_OAUTH_TOKEN_URL: ''
+      # POSTIZ_OAUTH_USERINFO_URL: ''
       # POSTIZ_OAUTH_CLIENT_ID: ''
       # POSTIZ_OAUTH_CLIENT_SECRET: ''
       # POSTIZ_OAUTH_SCOPE: 'openid profile email'
 
-      # === Email / Resend Settings
-      # Uncomment these if you want email verification.
+      # === Email / Resend
       # RESEND_API_KEY: ''
       # EMAIL_FROM_ADDRESS: 'noreply@diwanio.ae'
       # EMAIL_FROM_NAME: 'Diwanio Marketing'
 
-      # === Sentry / Debugging
-      # NEXT_PUBLIC_SENTRY_DSN: 'http://spotlight:8969/stream'
-      # SENTRY_SPOTLIGHT: '1'
+      # === MCP / Agent
+      # MCP_URL: 'https://marketing.diwanio.ae'
+      # AGENT_API_KEY: ''
+      # AGENT_MEDIA_SSO_KEY: ''
 
-      # === Misc Settings
+      # === AI
       OPENAI_API_KEY: ''
+
+      # === Misc
       NEXT_PUBLIC_DISCORD_SUPPORT: ''
       NEXT_PUBLIC_POLOTNO: ''
       API_LIMIT: 30
 
-      # === Payment / Stripe Settings
+      # === Stripe
       FEE_AMOUNT: 0.05
       STRIPE_PUBLISHABLE_KEY: ''
       STRIPE_SECRET_KEY: ''
@@ -148,8 +150,6 @@ services:
       - postiz-config:/config/
       - postiz-uploads:/uploads/
 
-    # No host port is required when Dokploy/Traefik routes
-    # marketing.diwanio.ae directly to container port 5000.
     expose:
       - '5000'
 
@@ -183,7 +183,6 @@ services:
 
   postiz-postgres:
     image: postgres:17-alpine
-    container_name: postiz-postgres
     restart: always
 
     environment:
@@ -211,7 +210,6 @@ services:
 
   postiz-redis:
     image: redis:7.2
-    container_name: postiz-redis
     restart: always
 
     volumes:
@@ -233,13 +231,11 @@ services:
 
 
   # Optional debugging service.
-  # It will not start during a normal deployment because it uses a profile.
   spotlight:
     profiles:
       - debug
 
     image: ghcr.io/getsentry/spotlight:latest
-    container_name: spotlight
     restart: unless-stopped
     pull_policy: always
 
@@ -256,7 +252,6 @@ services:
 
   temporal-elasticsearch:
     image: elasticsearch:7.17.27
-    container_name: temporal-elasticsearch
     restart: always
 
     environment:
@@ -291,7 +286,6 @@ services:
 
   temporal-postgresql:
     image: postgres:16
-    container_name: temporal-postgresql
     restart: always
 
     environment:
@@ -321,7 +315,6 @@ services:
 
   temporal:
     image: temporalio/auto-setup:1.28.1
-    container_name: temporal
     restart: always
 
     environment:
@@ -374,7 +367,6 @@ services:
 
   temporal-admin-tools:
     image: temporalio/admin-tools:1.28.1-tctl-1.18.4-cli-1.4.1
-    container_name: temporal-admin-tools
     restart: on-failure
 
     environment:
@@ -394,16 +386,12 @@ services:
 
   temporal-ui:
     image: temporalio/ui:2.34.0
-    container_name: temporal-ui
     restart: always
 
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CORS_ORIGINS=https://marketing.diwanio.ae
 
-    # Important:
-    # Do not map 8080:8080 to the host.
-    # This avoids the port conflict that caused your deployment to fail.
     expose:
       - '8080'
 
@@ -450,7 +438,7 @@ volumes:
 
 networks:
   postiz-network:
-    external: false
+    driver: bridge
 
   temporal-network:
     driver: bridge
