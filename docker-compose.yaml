@@ -275,6 +275,8 @@ services:
       - ES_SEEDS=temporal-elasticsearch
       - ES_VERSION=v7
       - TEMPORAL_NAMESPACE=default
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
 
     expose:
       - '7233'
@@ -298,13 +300,8 @@ services:
     healthcheck:
       test:
         [
-          'CMD',
-          'temporal',
-          'operator',
-          'cluster',
-          'health',
-          '--address',
-          'temporal:7233'
+          'CMD-SHELL',
+          'temporal operator cluster health --address 127.0.0.1:7233 | grep -q SERVING'
         ]
       interval: 10s
       timeout: 5s
