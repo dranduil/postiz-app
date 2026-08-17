@@ -171,63 +171,8 @@ services:
       start_period: 120s
 
     depends_on:
-      postiz-postgres:
-        condition: service_healthy
-
-      postiz-redis:
-        condition: service_healthy
-
       temporal:
         condition: service_healthy
-
-
-  postiz-postgres:
-    image: postgres:17-alpine
-    restart: always
-
-    environment:
-      POSTGRES_PASSWORD: 'postiz-password'
-      POSTGRES_USER: 'postiz-user'
-      POSTGRES_DB: 'postiz-db-local'
-
-    volumes:
-      - postgres-volume:/var/lib/postgresql/data
-
-    networks:
-      - postiz-network
-
-    healthcheck:
-      test:
-        [
-          'CMD-SHELL',
-          'pg_isready -U postiz-user -d postiz-db-local'
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-
-
-  postiz-redis:
-    image: redis:7.2
-    restart: always
-
-    volumes:
-      - postiz-redis-data:/data
-
-    networks:
-      - postiz-network
-
-    healthcheck:
-      test:
-        [
-          'CMD-SHELL',
-          'redis-cli ping | grep -q PONG'
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 5s
 
 
   # Optional debugging service.
