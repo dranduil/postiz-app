@@ -113,6 +113,8 @@
 
 To have the project up and running, please follow the [Quick Start Guide](https://docs.postiz.com/quickstart)
 
+For deployment through a self-hosted Dokploy instance with shared PostgreSQL and Redis, see [DOKPLOY.md](DOKPLOY.md).
+
 ## Sponsor Postiz
 
 We now give a few options to Sponsor Postiz:

@@ -1,135 +1,136 @@
 services:
   postiz:
-    image: ghcr.io/gitroomhq/postiz-app:latest
+    image: "${POSTIZ_IMAGE:-ghcr.io/gitroomhq/postiz-app:latest}"
+    pull_policy: always
     restart: always
 
     environment:
       # === Required Settings
-      MAIN_URL: 'https://marketing.diwanio.ae'
-      FRONTEND_URL: 'https://marketing.diwanio.ae'
-      NEXT_PUBLIC_BACKEND_URL: 'https://marketing.diwanio.ae/api'
+      MAIN_URL: "${MAIN_URL:?Set MAIN_URL in Dokploy}"
+      FRONTEND_URL: "${FRONTEND_URL:?Set FRONTEND_URL in Dokploy}"
+      NEXT_PUBLIC_BACKEND_URL: "${NEXT_PUBLIC_BACKEND_URL:?Set NEXT_PUBLIC_BACKEND_URL in Dokploy}"
 
       # Replace with a strong random secret
-      JWT_SECRET: 'CHANGE-THIS-TO-A-LONG-RANDOM-SECRET'
+      JWT_SECRET: "${JWT_SECRET:?Set JWT_SECRET in Dokploy}"
 
-      DATABASE_URL: 'postgresql://postiz-user:postiz-password@postiz-postgres:5432/postiz-db-local'
-      REDIS_URL: 'redis://postiz-redis:6379'
+      DATABASE_URL: "${DATABASE_URL:?Set DATABASE_URL to the shared PostgreSQL URL in Dokploy}"
+      REDIS_URL: "${REDIS_URL:?Set REDIS_URL to the shared Redis URL in Dokploy}"
 
-      BACKEND_INTERNAL_URL: 'http://localhost:3000'
-      TEMPORAL_ADDRESS: 'temporal:7233'
+      BACKEND_INTERNAL_URL: "${BACKEND_INTERNAL_URL:-http://localhost:3000}"
+      TEMPORAL_ADDRESS: "${TEMPORAL_ADDRESS:-temporal:7233}"
 
-      IS_GENERAL: 'true'
-      DISABLE_REGISTRATION: 'false'
-      RUN_CRON: 'true'
+      IS_GENERAL: "${IS_GENERAL:-true}"
+      DISABLE_REGISTRATION: "${DISABLE_REGISTRATION:-false}"
+      RUN_CRON: "${RUN_CRON:-true}"
 
       # === Storage Settings
-      STORAGE_PROVIDER: 'local'
-      UPLOAD_DIRECTORY: '/uploads'
-      NEXT_PUBLIC_UPLOAD_DIRECTORY: '/uploads'
+      STORAGE_PROVIDER: "${STORAGE_PROVIDER:-local}"
+      UPLOAD_DIRECTORY: "${UPLOAD_DIRECTORY:-/uploads}"
+      NEXT_PUBLIC_UPLOAD_DIRECTORY: "${NEXT_PUBLIC_UPLOAD_DIRECTORY:-/uploads}"
+      NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY: "${NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY:-/uploads}"
 
       # === Cloudflare R2 Settings
-      # STORAGE_PROVIDER: 'cloudflare'
-      # CLOUDFLARE_ACCOUNT_ID: ''
-      # CLOUDFLARE_ACCESS_KEY: ''
-      # CLOUDFLARE_SECRET_ACCESS_KEY: ''
-      # CLOUDFLARE_BUCKETNAME: ''
-      # CLOUDFLARE_BUCKET_URL: ''
-      # CLOUDFLARE_REGION: 'auto'
+      CLOUDFLARE_ACCOUNT_ID: "${CLOUDFLARE_ACCOUNT_ID:-}"
+      CLOUDFLARE_ACCESS_KEY: "${CLOUDFLARE_ACCESS_KEY:-}"
+      CLOUDFLARE_SECRET_ACCESS_KEY: "${CLOUDFLARE_SECRET_ACCESS_KEY:-}"
+      CLOUDFLARE_BUCKETNAME: "${CLOUDFLARE_BUCKETNAME:-}"
+      CLOUDFLARE_BUCKET_URL: "${CLOUDFLARE_BUCKET_URL:-}"
+      CLOUDFLARE_REGION: "${CLOUDFLARE_REGION:-auto}"
 
       # === Social Media Providers
-      X_URL: ''
-      X_API_KEY: ''
-      X_API_SECRET: ''
+      X_URL: "${X_URL:-}"
+      X_API_KEY: "${X_API_KEY:-}"
+      X_API_SECRET: "${X_API_SECRET:-}"
 
-      LINKEDIN_CLIENT_ID: ''
-      LINKEDIN_CLIENT_SECRET: ''
+      LINKEDIN_CLIENT_ID: "${LINKEDIN_CLIENT_ID:-}"
+      LINKEDIN_CLIENT_SECRET: "${LINKEDIN_CLIENT_SECRET:-}"
 
-      REDDIT_CLIENT_ID: ''
-      REDDIT_CLIENT_SECRET: ''
+      REDDIT_CLIENT_ID: "${REDDIT_CLIENT_ID:-}"
+      REDDIT_CLIENT_SECRET: "${REDDIT_CLIENT_SECRET:-}"
 
-      GITHUB_CLIENT_ID: ''
-      GITHUB_CLIENT_SECRET: ''
+      GITHUB_CLIENT_ID: "${GITHUB_CLIENT_ID:-}"
+      GITHUB_CLIENT_SECRET: "${GITHUB_CLIENT_SECRET:-}"
 
-      APPLE_CLIENT_ID: ''
-      APPLE_TEAM_ID: ''
-      APPLE_KEY_ID: ''
-      APPLE_PRIVATE_KEY: ''
+      APPLE_CLIENT_ID: "${APPLE_CLIENT_ID:-}"
+      APPLE_TEAM_ID: "${APPLE_TEAM_ID:-}"
+      APPLE_KEY_ID: "${APPLE_KEY_ID:-}"
+      APPLE_PRIVATE_KEY: "${APPLE_PRIVATE_KEY:-}"
 
-      BEEHIIVE_API_KEY: ''
-      BEEHIIVE_PUBLICATION_ID: ''
+      BEEHIIVE_API_KEY: "${BEEHIIVE_API_KEY:-}"
+      BEEHIIVE_PUBLICATION_ID: "${BEEHIIVE_PUBLICATION_ID:-}"
 
-      THREADS_APP_ID: ''
-      THREADS_APP_SECRET: ''
+      THREADS_APP_ID: "${THREADS_APP_ID:-}"
+      THREADS_APP_SECRET: "${THREADS_APP_SECRET:-}"
 
-      FACEBOOK_APP_ID: ''
-      FACEBOOK_APP_SECRET: ''
+      FACEBOOK_APP_ID: "${FACEBOOK_APP_ID:-}"
+      FACEBOOK_APP_SECRET: "${FACEBOOK_APP_SECRET:-}"
 
-      YOUTUBE_CLIENT_ID: ''
-      YOUTUBE_CLIENT_SECRET: ''
+      YOUTUBE_CLIENT_ID: "${YOUTUBE_CLIENT_ID:-}"
+      YOUTUBE_CLIENT_SECRET: "${YOUTUBE_CLIENT_SECRET:-}"
 
-      TIKTOK_CLIENT_ID: ''
-      TIKTOK_CLIENT_SECRET: ''
+      TIKTOK_CLIENT_ID: "${TIKTOK_CLIENT_ID:-}"
+      TIKTOK_CLIENT_SECRET: "${TIKTOK_CLIENT_SECRET:-}"
 
-      PINTEREST_CLIENT_ID: ''
-      PINTEREST_CLIENT_SECRET: ''
+      PINTEREST_CLIENT_ID: "${PINTEREST_CLIENT_ID:-}"
+      PINTEREST_CLIENT_SECRET: "${PINTEREST_CLIENT_SECRET:-}"
 
-      DRIBBBLE_CLIENT_ID: ''
-      DRIBBBLE_CLIENT_SECRET: ''
+      DRIBBBLE_CLIENT_ID: "${DRIBBBLE_CLIENT_ID:-}"
+      DRIBBBLE_CLIENT_SECRET: "${DRIBBBLE_CLIENT_SECRET:-}"
 
-      TUMBLR_CLIENT_ID: ''
-      TUMBLR_CLIENT_SECRET: ''
+      TUMBLR_CLIENT_ID: "${TUMBLR_CLIENT_ID:-}"
+      TUMBLR_CLIENT_SECRET: "${TUMBLR_CLIENT_SECRET:-}"
 
-      DISCORD_CLIENT_ID: ''
-      DISCORD_CLIENT_SECRET: ''
-      DISCORD_BOT_TOKEN_ID: ''
+      DISCORD_CLIENT_ID: "${DISCORD_CLIENT_ID:-}"
+      DISCORD_CLIENT_SECRET: "${DISCORD_CLIENT_SECRET:-}"
+      DISCORD_BOT_TOKEN_ID: "${DISCORD_BOT_TOKEN_ID:-}"
 
-      SLACK_ID: ''
-      SLACK_SECRET: ''
-      SLACK_SIGNING_SECRET: ''
+      SLACK_ID: "${SLACK_ID:-}"
+      SLACK_SECRET: "${SLACK_SECRET:-}"
+      SLACK_SIGNING_SECRET: "${SLACK_SIGNING_SECRET:-}"
 
-      MASTODON_URL: 'https://mastodon.social'
-      MASTODON_CLIENT_ID: ''
-      MASTODON_CLIENT_SECRET: ''
+      MASTODON_URL: "${MASTODON_URL:-https://mastodon.social}"
+      MASTODON_CLIENT_ID: "${MASTODON_CLIENT_ID:-}"
+      MASTODON_CLIENT_SECRET: "${MASTODON_CLIENT_SECRET:-}"
 
       # === OAuth / OIDC
-      # NEXT_PUBLIC_POSTIZ_OAUTH_DISPLAY_NAME: 'Authentik'
-      # NEXT_PUBLIC_POSTIZ_OAUTH_LOGO_URL: ''
-      # POSTIZ_GENERIC_OAUTH: 'false'
-      # POSTIZ_OAUTH_URL: ''
-      # POSTIZ_OAUTH_AUTH_URL: ''
-      # POSTIZ_OAUTH_TOKEN_URL: ''
-      # POSTIZ_OAUTH_USERINFO_URL: ''
-      # POSTIZ_OAUTH_CLIENT_ID: ''
-      # POSTIZ_OAUTH_CLIENT_SECRET: ''
-      # POSTIZ_OAUTH_SCOPE: 'openid profile email'
+      NEXT_PUBLIC_POSTIZ_OAUTH_DISPLAY_NAME: "${NEXT_PUBLIC_POSTIZ_OAUTH_DISPLAY_NAME:-}"
+      NEXT_PUBLIC_POSTIZ_OAUTH_LOGO_URL: "${NEXT_PUBLIC_POSTIZ_OAUTH_LOGO_URL:-}"
+      POSTIZ_GENERIC_OAUTH: "${POSTIZ_GENERIC_OAUTH:-false}"
+      POSTIZ_OAUTH_URL: "${POSTIZ_OAUTH_URL:-}"
+      POSTIZ_OAUTH_AUTH_URL: "${POSTIZ_OAUTH_AUTH_URL:-}"
+      POSTIZ_OAUTH_TOKEN_URL: "${POSTIZ_OAUTH_TOKEN_URL:-}"
+      POSTIZ_OAUTH_USERINFO_URL: "${POSTIZ_OAUTH_USERINFO_URL:-}"
+      POSTIZ_OAUTH_CLIENT_ID: "${POSTIZ_OAUTH_CLIENT_ID:-}"
+      POSTIZ_OAUTH_CLIENT_SECRET: "${POSTIZ_OAUTH_CLIENT_SECRET:-}"
+      POSTIZ_OAUTH_SCOPE: "${POSTIZ_OAUTH_SCOPE:-openid profile email}"
 
       # === Email / Resend
-      # RESEND_API_KEY: ''
-      # EMAIL_FROM_ADDRESS: 'noreply@diwanio.ae'
-      # EMAIL_FROM_NAME: 'Diwanio Marketing'
+      RESEND_API_KEY: "${RESEND_API_KEY:-}"
+      EMAIL_FROM_ADDRESS: "${EMAIL_FROM_ADDRESS:-}"
+      EMAIL_FROM_NAME: "${EMAIL_FROM_NAME:-}"
 
       # === MCP / Agent
-      # MCP_URL: 'https://marketing.diwanio.ae'
-      # AGENT_API_KEY: ''
-      # AGENT_MEDIA_SSO_KEY: ''
+      MCP_URL: "${MCP_URL:-}"
+      AGENT_API_KEY: "${AGENT_API_KEY:-}"
+      AGENT_MEDIA_SSO_KEY: "${AGENT_MEDIA_SSO_KEY:-}"
 
       # === AI
-      OPENAI_API_KEY: ''
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
 
       # === Misc
-      NEXT_PUBLIC_DISCORD_SUPPORT: ''
-      NEXT_PUBLIC_POLOTNO: ''
-      API_LIMIT: 30
+      NEXT_PUBLIC_DISCORD_SUPPORT: "${NEXT_PUBLIC_DISCORD_SUPPORT:-}"
+      NEXT_PUBLIC_POLOTNO: "${NEXT_PUBLIC_POLOTNO:-}"
+      API_LIMIT: "${API_LIMIT:-30}"
 
       # === Stripe
-      FEE_AMOUNT: 0.05
-      STRIPE_PUBLISHABLE_KEY: ''
-      STRIPE_SECRET_KEY: ''
-      STRIPE_SIGNING_KEY: ''
-      STRIPE_SIGNING_KEY_CONNECT: ''
+      FEE_AMOUNT: "${FEE_AMOUNT:-0.05}"
+      STRIPE_PUBLISHABLE_KEY: "${STRIPE_PUBLISHABLE_KEY:-}"
+      STRIPE_SECRET_KEY: "${STRIPE_SECRET_KEY:-}"
+      STRIPE_SIGNING_KEY: "${STRIPE_SIGNING_KEY:-}"
+      STRIPE_SIGNING_KEY_CONNECT: "${STRIPE_SIGNING_KEY_CONNECT:-}"
 
       # === Developer Settings
-      NX_ADD_PLUGINS: false
+      NX_ADD_PLUGINS: "${NX_ADD_PLUGINS:-false}"
 
       # === Short Link Services
       # DUB_TOKEN: ''
@@ -156,6 +157,7 @@ services:
     networks:
       - postiz-network
       - temporal-network
+      - dokploy-network
 
     healthcheck:
       test:
@@ -335,7 +337,7 @@ services:
 
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=https://marketing.diwanio.ae
+      - TEMPORAL_CORS_ORIGINS=${TEMPORAL_CORS_ORIGINS:?Set TEMPORAL_CORS_ORIGINS in Dokploy}
 
     expose:
       - '8080'
@@ -362,12 +364,6 @@ services:
 
 
 volumes:
-  postgres-volume:
-    external: false
-
-  postiz-redis-data:
-    external: false
-
   postiz-config:
     external: false
 
@@ -387,3 +383,8 @@ networks:
 
   temporal-network:
     driver: bridge
+
+  # Dokploy's Traefik and shared PostgreSQL/Redis containers must be on this network.
+  dokploy-network:
+    external: true
+    name: "${DOKPLOY_NETWORK_NAME:-dokploy-network}"
