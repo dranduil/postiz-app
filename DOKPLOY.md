@@ -23,10 +23,11 @@ NEXT_PUBLIC_BACKEND_URL=https://marketing.example.com/api
 JWT_SECRET=<long-random-secret>
 DATABASE_URL=postgresql://<user>:<password>@<shared-postgres-container>:5432/<database>
 REDIS_URL=redis://<shared-redis-container>:6379
-TEMPORAL_CORS_ORIGINS=https://marketing.example.com
 ```
 
 Use the shared container's Docker DNS name, not `localhost`, for `DATABASE_URL` and `REDIS_URL`. URL-encode any special characters in the PostgreSQL username or password. The PostgreSQL database must already exist; the application runs its existing Prisma startup step when the container starts.
+
+`TEMPORAL_CORS_ORIGINS` is optional. Set it to the public frontend URL only if you expose the internal Temporal UI; otherwise Compose uses a local-only fallback.
 
 The default values in Compose use local uploads and enable registration. Set the corresponding environment variables in Dokploy for production storage, registration policy, social providers, email, OAuth, AI, billing, or object storage.
 

@@ -337,7 +337,7 @@ services:
 
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=${TEMPORAL_CORS_ORIGINS:?Set TEMPORAL_CORS_ORIGINS in Dokploy}
+      - "TEMPORAL_CORS_ORIGINS=${TEMPORAL_CORS_ORIGINS:-http://localhost:4200}"
 
     expose:
       - '8080'
